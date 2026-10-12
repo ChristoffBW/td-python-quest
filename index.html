@@ -223,7 +223,7 @@ const UNITS=[
   fill("Add the prefix that makes the value get inserted.","print(___'Frame is {frame}')",["f"],["s","format","$"],"An `f` before the opening quote creates an f-string."),
   mc("What is `'beat' + 'box'`?",["'beatbox'","'beat box'","'beat+box'","An error"],"`+` glues strings together with no space added.",null,true),
   mc("What is `'ab' * 3`?",["'ababab'","'ab3'","6","An error"],"`*` repeats a string.",null,true),
-  typ("Store the text visuals in a variable named title.",["title='visuals'"],"`title = 'visuals'`"),
+  typ("Store the text visuals in a variable named title.",["title = 'visuals'"],"`title = 'visuals'`"),
   mc("What does `len('noise')` return?",["5","4","'noise'","1"],"`len()` counts characters."),
   mc("Which line prints `Value: 0.5` when `v = 0.5`?",["print(f'Value: {v}')","print('Value: {v}')","print(f'Value: v')","print('Value: ' + v)"],"Only the f-string inserts the number. Adding a str and a float is a TypeError.",null,true)
  ]},
@@ -251,7 +251,7 @@ const UNITS=[
   mc("Which of these is an absolute path?",["op('/project1/noise1')","op('noise1')","op('../noise1')","op('./noise1')"],"Absolute paths begin with `/` from the root.",null,true),
   mc("What does `op('../movie1')` refer to?",["movie1 in the parent network","movie1 inside this network","A folder called ..","The last movie operator"],"`..` means go up one network level."),
   match("Match the expression to what it gives you.",[["me","This operator itself"],["parent()","The COMP holding this node"],["op('/project1')","A node by absolute path"],["op('geo1')","A node by relative name"]]),
-  typ("Store the node named level1 in a variable called lvl.",["lvl=op('level1')"],"`lvl = op('level1')`"),
+  typ("Store the node named level1 in a variable called lvl.",["lvl = op('level1')"],"`lvl = op('level1')`"),
   mc("What does `op('does_not_exist')` return?",["None","An error is raised","An empty string","0"],"No match gives `None` — check for it before using the result.",null,true)
  ]},
  {title:"Parameters",icon:"🎛️",tip:[
@@ -264,7 +264,7 @@ const UNITS=[
   mc("Which returns the parameter's current result, even if it has an expression?",[".eval()",".val",".expr",".name"],"`.val` is the constant value; `.eval()` gives the live result.",null,true),
   fill("Switch the parameter to expression mode.","op('noise1').par.tz.___ = ParMode.EXPRESSION",["mode"],["state","type","kind"],"`.mode` accepts `ParMode.CONSTANT`, `EXPRESSION`, `EXPORT`, `BIND`."),
   mc("How do you press the Reload pulse button from Python?",["op('movie1').par.reload.pulse()","op('movie1').par.reload = pulse","op('movie1').par.reload.click()","op('movie1').par.reload.press"],"Pulse parameters have a `.pulse()` method.",null,true),
-  mc("Which expression makes a parameter follow time in seconds?",["absTime.seconds","time.now","seconds()","absTime()"],"`absTime.seconds` counts seconds since the project started.",null,true)
+  mc("Which expression makes a parameter follow time in seconds?",["absTime.seconds","time.now","seconds()","absTime()"],"`absTime.seconds` counts seconds since TouchDesigner started.",null,true)
  ]},
  {title:"Walking the network",icon:"🧭",tip:[
   {t:"Every operator knows about itself and its surroundings: `.name`, `.path`, `.family`, `.type`, `.children`, `.parent()`."},
@@ -288,7 +288,7 @@ const UNITS=[
   mc("Which safely tests that a node exists?",["if op('moviein1'):","if op('moviein1') == True:","if exists('moviein1'):","if op('moviein1').exists():"],"A missing node is `None`, which is falsy.",null,true),
   fill("Count the children of geo1.","n = ___(op('geo1').children)",["len"],["count","size","num"],"`len()` counts list items."),
   mc("What does `type(op('moviein1'))` return?",["A class object, not a string","The string 'moviein'","The string 'TOP'","The node's path"],"For text use `.type` or `.family`; for checks use `isinstance()`."),
-  typ("Check whether the operator in variable o is a TOP using isinstance.",["isinstance(o,TOP)"],"`isinstance(o, TOP)`")
+  typ("Check whether the operator in variable o is a TOP using isinstance.",["isinstance(o, TOP)"],"`isinstance(o, TOP)`")
  ]}
 ]},
 /* ================= UNIT 3 ================= */
@@ -302,7 +302,7 @@ const UNITS=[
   mc("What is `op('lfo1').numChans`?",["How many channels the CHOP has","How many samples each channel has","The frame number","The CHOP's name"],"`numChans` = channel count; `numSamples` = length of each."),
   mc("What does `op('lfo1')['chan1'][0]` return?",["The first sample of chan1","The first channel","The name chan1","The last sample"],"Square brackets on a channel pick a sample (counting from 0).",null),
   match("Match each attribute to its meaning.",[[".numSamples","Length of each channel"],[".numChans","How many channels"],["chan.name","The channel's name"],["chan.vals","List of all sample values"]]),
-  typ("Store the current value of channel tx of null1 in x using .eval().",["x=op('null1')['tx'].eval()"],"`x = op('null1')['tx'].eval()`"),
+  typ("Store the current value of channel tx of null1 in x using .eval().",["x = op('null1')['tx'].eval()"],"`x = op('null1')['tx'].eval()`"),
   mc("Which expression text, typed in a parameter, reads chan1 of lfo1?",["op('lfo1')['chan1']","op('lfo1').chan['chan1']","op('lfo1')(chan1)","lfo1.chan1"],"A Channel evaluates to its current number inside an expression.",null,true),
   mc("What does `op('noise1')['chan1'].eval(2)` return?",["Sample 2 of chan1","Channel number 2","chan1 at frame 2","The name of channel 2"],"`.eval(n)` picks a sample; with no argument it gives the current one.",null,true),
   mc("What does `op('noise1')[0][2]` return?",["The third sample of the first channel","The first sample of the third channel","The channel named 2","The third CHOP"],"First brackets pick the channel, second pick the sample — both from 0.",null,true)
@@ -317,7 +317,7 @@ const UNITS=[
   mc("Which line empties a table DAT?",["op('table1').clear()","op('table1').delete()","op('table1').empty()","op('table1').reset()"],"`.clear()` removes all rows and columns.",null,true),
   order("Set the text of text1 to hello.",["op('text1')",".text","=","'hello'"],[".txt","=="],"A Text DAT's content lives in `.text`."),
   mc("Rows and columns are counted starting at…",["0","1","-1","It depends on the DAT"],"Python — and TD's cell indexing — starts at zero."),
-  typ("Append a row containing a and b to table1.",["op('table1').appendRow(['a','b'])"],"`op('table1').appendRow(['a', 'b'])`"),
+  typ("Append a row containing a and b to table1.",["op('table1').appendRow(['a', 'b'])"],"`op('table1').appendRow(['a', 'b'])`"),
   mc("Which line sets a cell in table1 to hello?",["op('table1')[3, 4] = 'hello'","op('table1').set(3, 4, 'hello')","op('table1').cell(3, 4) = 'hello'","op('table1')[3][4].put('hello')"],"You can assign to a cell with `[row, col] =`.",null,true),
   mc("Which clears table1 but keeps its header row?",["op('table1').clear(keepFirstRow=True)","op('table1').clear(header=True)","op('table1').trim(1)","op('table1').clear(1)"],"`clear()` has `keepFirstRow`, `keepFirstCol` and `keepSize` options.",null,true)
  ]},
@@ -331,7 +331,7 @@ const UNITS=[
   mc("What does this return?",["10","15","0","None"],"15 is above the max, so it's clamped to 10.",`tdu.clamp(15, 0, 10)`,true),
   fill("Import the module that provides sin().","import ___\nprint(math.sin(1))",["math"],["maths","sin","tdu"],"`import math` gives you `math.sin`, `math.pi` and more."),
   mc("What does `tdu.rand(5)` return?",["A repeatable random float for seed 5","A new random int each call","The number 5","A random operator"],"The same seed always gives the same value — great for deterministic motion."),
-  typ("Clamp v between 0 and 1 and store it back in v.",["v=tdu.clamp(v,0,1)"],"`v = tdu.clamp(v, 0, 1)`"),
+  typ("Clamp v between 0 and 1 and store it back in v.",["v = tdu.clamp(v, 0, 1)"],"`v = tdu.clamp(v, 0, 1)`"),
   mc("What does this return?",["90.0","0.75","180","-90.0"],"0.75 of the way from -180 to 180 is 90.",`tdu.remap(0.75, 0, 1, -180, 180)`,true),
   mc("What does `tdu.validName('text-dat$%JSON?')` return?",["'text_dat__JSON_'","'textdatJSON'","'text-dat$%JSON?'","An error"],"It swaps illegal characters for underscores so the result works as an operator name.",null,true),
   mc("Which gives a different random value every frame?",["tdu.rand(absTime.frame)","tdu.rand(5)","tdu.rand(me)","tdu.rand('frame')"],"A fixed seed gives a fixed result; a changing seed changes it.",null,true)
@@ -360,7 +360,7 @@ const UNITS=[
   mc("What does this code do?",["Sets seed to 1 on every noise* operator","Sets seed on the first noise only","Creates operators","Nothing — a loop can't set params"],"The loop visits each matching operator in turn.",`for o in ops('noise*'):\n    o.par.seed = 1`),
   order("Build a loop header for all geo* operators.",["for","o","in","ops('geo*')",":"],["of","while"],"`for item in list:`"),
   mc("What does `enumerate(['a', 'b'])` produce?",["(0, 'a') and (1, 'b')","'a' and 'b'","[0, 1]","['a', 'b']"],"It pairs each item with its index."),
-  typ("Write the loop header that walks ops('level*') using variable o.",["foroinops('level*'):"],"`for o in ops('level*'):`"),
+  typ("Write the loop header that walks ops('level*') using variable o.",["for o in ops('level*'):"],"`for o in ops('level*'):`"),
   mc("What does indentation do in Python?",["It defines which lines belong to the loop or block","Nothing, it's only style","It comments out lines","It sets the line's colour"],"Everything indented under the `for` line is the loop body.")
  ]},
  {title:"Lists, dicts, functions",icon:"🧰",tip:[
@@ -378,7 +378,7 @@ const UNITS=[
 /* ================= UNIT 5 ================= */
 {title:"Callbacks",desc:"React to frames, channels and parameters",color:"#e5c13d",dark:"#b39a2e",lessons:[
  {title:"Execute DAT",icon:"⚡",tip:[
-  {t:"An **Execute DAT** calls your functions at key moments. Switch on the matching toggle (like *Frame Start*) and make sure *Active* is on.",code:"def onStart():\n    print('project opened')\n\ndef onFrameStart(frame):\n    op('noise1').par.seed = frame"},
+  {t:"An **Execute DAT** calls your functions at key moments. Switch on the matching toggle (like **Frame Start**) and make sure *Active* is on.",code:"def onStart():\n    print('project opened')\n\ndef onFrameStart(frame):\n    op('noise1').par.seed = frame"},
   {t:"`onFrameStart` and `onFrameEnd` run every single frame — keep them light or your FPS will drop."}],
   ex:[
   mc("Which Execute DAT callback runs at the start of every frame?",["onFrameStart","onTick","onUpdate","onLoop"],"There's also `onFrameEnd` for the end of the frame.",null,true),
@@ -386,7 +386,7 @@ const UNITS=[
   mc("Why should Execute DAT frame code stay short?",["It runs every frame; slow code drops FPS","Python limits scripts to 10 lines","Long scripts won't save","It makes the file bigger"],"Heavy work every frame is a classic performance trap."),
   mc("Which callback fires once when the project starts?",["onStart","onCreate","onInit","onBoot"],"`onStart` runs when the project loads.",null,true),
   mc("In onFrameStart(frame), what is `frame`?",["The current absolute frame number","A frame operator","The previous frame's time","The number of frames left"],"It's handy for seeding animation."),
-  typ("Write the function header for onFrameEnd taking frame.",["defonFrameEnd(frame):"],"`def onFrameEnd(frame):`"),
+  typ("Write the function header for onFrameEnd taking frame.",["def onFrameEnd(frame):"],"`def onFrameEnd(frame):`"),
   mc("What must you do so an Execute DAT callback actually runs?",["Turn on Active and the matching toggle","Rename the DAT to execute1","Cook the DAT manually","Nothing, it always runs"],"Each callback has its own toggle parameter.")
  ]},
  {title:"CHOP Execute",icon:"🔔",tip:[
@@ -443,7 +443,7 @@ const UNITS=[
  ]},
  {title:"Storage & extensions",icon:"🧬",tip:[
   {t:"`store()` and `fetch()` keep values on an operator, even across cooks. Great for counters and state.",code:"n = me.fetch('hits', 0)\nme.store('hits', n + 1)"},
-  {t:"An **extension** is a Python class attached to a COMP. Capitalised members get *promoted* — callable straight on the COMP.",code:"class MyExt:\n    def __init__(self, ownerComp):\n        self.ownerComp = ownerComp\n\n    def Reset(self):\n        print('reset!')\n\n# elsewhere:\nop('base1').Reset()"}],
+  {t:"An **extension** is a Python class attached to a COMP. Capitalised members get **promoted** — callable straight on the COMP.",code:"class MyExt:\n    def __init__(self, ownerComp):\n        self.ownerComp = ownerComp\n\n    def Reset(self):\n        print('reset!')\n\n# elsewhere:\nop('base1').Reset()"}],
   ex:[
   mc("What does `me.store('hits', 3)` do?",["Saves a value on this operator","Prints hits","Creates a hits parameter","Stores a frame number"],"It keeps the value on the operator until you change it.",null),
   fill("Read a stored value, defaulting to 0.","n = me.___('hits', 0)",["fetch"],["load","read","get"],"`fetch(name, default)` returns the stored value."),
@@ -587,7 +587,7 @@ UNITS.push(
   fill("Return a parameter to its default.","op('geo1').par.tx.___()",["reset"],["clear","default","restore"],"`reset()` returns True if anything changed."),
   mc("Why use `par.isSamePar(other)`?",["It's the supported way to check two references point at the same parameter","It's faster than ==","It copies the value","It compares only names"],"The docs say to use it instead of `==` or `is`."),
   mc("Which attribute is True when value, expression and mode are all at defaults?",["isDefault","isSame","atDefault","isReset"],"Pair it with `reset()`.",null,true),
-  typ("Switch par.tx on geo1 to expression mode using .mode.",["op('geo1').par.tx.mode=ParMode.EXPRESSION"],"`op('geo1').par.tx.mode = ParMode.EXPRESSION`")
+  typ("Switch par.tx on geo1 to expression mode using .mode.",["op('geo1').par.tx.mode = ParMode.EXPRESSION"],"`op('geo1').par.tx.mode = ParMode.EXPRESSION`")
  ]},
  {title:"Ranges, menus & pulses",icon:"🎛️",tip:[
   {t:"Range attributes: `min`, `max`, `clampMin`, `clampMax`, `normMin`, `normMax`, `normVal` and `evalNorm()` (the normalized slider value). Menus have `menuNames`, `menuLabels` and `menuIndex`.",code:"n.par.xord.menuIndex = 5\nn.par.xord.menuNames\nn.par.tx.evalNorm()"},
@@ -695,7 +695,7 @@ UNITS.push(
 /* ================= UNIT 13 ================= */
 {title:"Extensions Mastery",desc:"Promotion, dependable properties, storage and gotchas",color:"#8fd9a8",dark:"#66b383",lessons:[
  {title:"Setting up extensions",icon:"🧱",tip:[
-  {t:"Add an extension in the Component Editor (right-click → *Customize Component…* → Extension Code), or set the **Extension Object** parameter to an expression that returns an object, like `ExampleExt(me)`. Convention: capitalise the name and add an `Ext` suffix. *Re-Init Extensions* re-runs that code.",code:"class ExampleExt:\n    def __init__(self, ownerComp):\n        self.ownerComp = ownerComp\n        self.a = 0   # not promoted\n        self.B = 1   # promoted"},
+  {t:"Add an extension in the Component Editor (right-click → **Customize Component…** → Extension Code), or set the **Extension Object** parameter to an expression that returns an object, like `ExampleExt(me)`. Convention: capitalise the name and add an `Ext` suffix. **Re-Init Extensions** re-runs that code.",code:"class ExampleExt:\n    def __init__(self, ownerComp):\n        self.ownerComp = ownerComp\n        self.a = 0   # not promoted\n        self.B = 1   # promoted"},
   {t:"With **Promote Extension** on, capitalised members are callable on the COMP itself. Everything is reachable through `ext`, which searches up the hierarchy.",code:"op('c').B\nop('c').ext.ExampleExt.a\nme.ext.ExampleExt.myFunction('test')\nop('c').extensions[0]"}],
   ex:[
   mc("What must the Extension Object expression return?",["An object, e.g. ExampleExt(me)","A string path","A module","A DAT"],"The returned object becomes the extension instance."),
@@ -738,11 +738,12 @@ UNITS.push(
 // ---------- helpers ----------
 const $=s=>document.querySelector(s);
 const app=$('#app');
-const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const escT=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const esc=s=>escT(s).replace(/"/g,'&quot;');
 const fmt=s=>esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>');
 function hl(code){
   if(code==null) return '';
-  return esc(code).replace(
+  return escT(code).replace(
     /(#.*$)|('(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*")|\b(\d+\.?\d*)\b|\b(def|if|elif|else|for|in|return|import|from|as|while|and|or|not|True|False|None|class|lambda|pass|self)\b|\b(op|ops|me|parent|absTime|tdu|ui|debug|project|app|scriptOp|ownerComp|mod|run|ParMode|noiseTOP|print)\b/gm,
     (m,c,s,n,k,t)=>c?`<span class="c">${c}</span>`:s?`<span class="s">${s}</span>`:n?`<span class="n">${n}</span>`:k?`<span class="k">${k}</span>`:`<span class="t">${t}</span>`);
 }
@@ -752,8 +753,24 @@ const sameArr=(a,b)=>a.length===b.length&&a.every((x,i)=>x===b[i]);
 
 // ---------- save ----------
 const day=d=>d.toLocaleDateString('en-CA');
+const daysAgo=n=>{const d=new Date();d.setDate(d.getDate()-n);return d};
 const newProfile=name=>({name,xp:0,streak:0,last:'',done:{},stats:{},log:{},kinds:{},c:0,w:0,created:Date.now()});
 let store={v:2,active:'p1',sound:true,profiles:{}},save,canPersist=true;
+const validLesson=id=>{const[u,l]=String(id).split('-').map(Number);return!!(UNITS[u]&&UNITS[u].lessons[l])};
+function cleanProfiles(){
+  const out={};
+  for(const id in store.profiles){
+    const p=store.profiles[id];if(!p||typeof p!=='object') continue;
+    const q=Object.assign(newProfile('Player'),p);
+    for(const k of ['done','stats','log','kinds']) if(!q[k]||typeof q[k]!=='object') q[k]={};
+    for(const k of Object.keys(q.done)) if(!validLesson(k)) delete q.done[k];
+    for(const k of Object.keys(q.stats)) if(!validLesson(k)) delete q.stats[k];
+    q.name=String(q.name||'Player').slice(0,24);
+    for(const k of ['xp','streak','c','w']) q[k]=+q[k]||0;
+    out[id]=q;
+  }
+  store.profiles=out;
+}
 function selectProfile(id){store.active=id;save=Object.assign(newProfile(''),store.profiles[id]);store.profiles[id]=save}
 function loadStore(){
   try{
@@ -764,13 +781,14 @@ function loadStore(){
       if(old){const o=JSON.parse(old);store.profiles.p1=Object.assign(newProfile('Player 1'),{xp:o.xp||0,streak:o.streak||0,last:o.last||'',done:o.done||{}});store.sound=o.sound!==false}
     }
   }catch(e){canPersist=false}
+  if(store.profiles&&typeof store.profiles==='object') cleanProfiles(); else store.profiles={};
   if(!store.profiles||!Object.keys(store.profiles).length){store.profiles={p1:newProfile('Player 1')};store.active='p1'}
   if(!store.profiles[store.active]) store.active=Object.keys(store.profiles)[0];
   selectProfile(store.active);
 }
 function persist(){try{localStorage.setItem('tdpq2',JSON.stringify(store));canPersist=true}catch(e){canPersist=false}}
 function curStreak(){
-  const t=day(new Date()),y=day(new Date(Date.now()-864e5));
+  const t=day(new Date()),y=day(daysAgo(1));
   return(save.last===t||save.last===y)?save.streak:0;
 }
 function bumpStreak(){
@@ -966,7 +984,7 @@ function bindQ(){
     if(L.locked) return;
     q.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{s.sel=+b.dataset.l;renderQ()});
     q.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{
-      if(s.sel==null) return;
+      if(s.sel==null||L.hearts<=0) return;
       const r=+b.dataset.r,l=s.sel;
       if(r===l){
         s.matched.add(l);s.sel=null;
@@ -974,7 +992,7 @@ function bindQ(){
       } else {
         s.bad={l,r};s.sel=null;L.hearts--;L.mistakes++;tally('match',false);updateHearts();sBad();renderQ();
         const cur=e;
-        setTimeout(()=>{if(L&&L.e===cur&&L.s===s){s.bad=null;if(L.hearts<=0) failed(); else if(!L.locked) renderQ()}},450);
+        setTimeout(()=>{if(L&&L.e===cur&&L.s===s){s.bad=null;if(L.locked) return;if(L.hearts<=0) failed(); else renderQ()}},450);
       }
     });
   }
@@ -1088,6 +1106,8 @@ function importText(text){
   if(!o||typeof o!=='object'||!o.profiles||typeof o.profiles!=='object'||!Object.keys(o.profiles).length) return toast('No profiles found in that data');
   ask('Replace progress?','Importing replaces all profiles on this device with the backup ('+Object.keys(o.profiles).length+' profile(s)).','Import',()=>{
     store={v:2,active:o.active,sound:o.sound!==false,profiles:o.profiles};
+    cleanProfiles();
+    if(!Object.keys(store.profiles).length){store.profiles={p1:newProfile('Player 1')};store.active='p1'}
     if(!store.profiles[store.active]) store.active=Object.keys(store.profiles)[0];
     selectProfile(store.active);persist();toast('Progress imported');progressScreen();
   },true);
@@ -1104,7 +1124,7 @@ function progressScreen(){
   const totalL=UNITS.reduce((n,u)=>n+u.lessons.length,0),doneL=Object.keys(save.done).length;
   const ans=save.c+save.w,acc=ans?Math.round(save.c/ans*100):0;
   const stars=Object.values(save.done).reduce((a,b)=>a+b,0);
-  const days=[];for(let i=13;i>=0;i--){const d=new Date(Date.now()-i*864e5);days.push([day(d),d])}
+  const days=[];for(let i=13;i>=0;i--){const d=daysAgo(i);days.push([day(d),d])}
   const xps=days.map(([k])=>save.log[k]||0),mx=Math.max(20,...xps);
   let h=`<div class="home"><header class="top"><button class="x" id="pback" aria-label="Back">←</button><div class="logo">Progress</div><div class="stats"><span class="chip">🔥 ${curStreak()}</span><span class="chip">⚡ ${save.xp}</span></div></header>`;
   if(!canPersist) h+=`<div class="warn">⚠️ This browser can't save progress (private mode?). Use <b>Download backup</b> below to keep it.</div>`;
@@ -1121,11 +1141,11 @@ function progressScreen(){
     return `<div class="mrow" style="--c:${a>=80?'var(--green)':a>=60?'var(--gold)':'var(--red)'}"><div class="lbl">${KIND_NAMES[k]}</div><div class="meter"><i style="width:${a}%"></i></div><div class="val">${a}% · ${t}</div></div>`}).join(''):`<div style="color:var(--muted)">Complete a lesson to see this.</div>`)+`</div>`;
   const weak=Object.keys(save.done).filter(id=>save.done[id]<3||((save.stats[id]||{}).best||100)<80)
     .sort((a,b)=>(save.done[a]-save.done[b])||(((save.stats[a]||{}).best||100)-((save.stats[b]||{}).best||100))).slice(0,5);
-  h+=`<div class="panel"><h3>Review suggestions</h3>`+(weak.length?weak.map(id=>`<div class="review"><div><b>${esc(lessonName(id))}</b><div style="color:var(--muted);font-size:12px">${'★'.repeat(save.done[id])}${'☆'.repeat(3-save.done[id])} · best ${(save.stats[id]||{}).best||'—'}% · ${(save.stats[id]||{}).attempts||1} attempt(s)</div></div><button class="btn sm" data-rev="${id}">Practice</button></div>`).join(''):`<div style="color:var(--muted)">${doneL?'Everything you\'ve finished is at three stars. 🎉':'Finish a lesson and weak spots will show up here.'}</div>`)+`</div>`;
+  h+=`<div class="panel"><h3>Review suggestions</h3>`+(weak.length?weak.map(id=>`<div class="review"><div><b>${esc(lessonName(id))}</b><div style="color:var(--muted);font-size:12px">${'★'.repeat(save.done[id])}${'☆'.repeat(3-save.done[id])} · best ${(save.stats[id]||{}).best||'—'}% · ${(save.stats[id]||{}).attempts||1} attempt(s)</div></div><button class="btn sm" data-rev="${esc(id)}">Practice</button></div>`).join(''):`<div style="color:var(--muted)">${doneL?'Everything you\'ve finished is at three stars. 🎉':'Finish a lesson and weak spots will show up here.'}</div>`)+`</div>`;
   h+=`<div class="panel"><h3>Profiles</h3>`+Object.keys(store.profiles).map(id=>{const p=store.profiles[id];
     return `<div class="prof ${id===store.active?'on':''}"><div class="nm">${esc(p.name)}</div><small>⚡${p.xp} · ${Object.keys(p.done).length}/${totalL}</small>
-    ${id===store.active?`<button class="btn ghost sm" data-ren="${id}">Rename</button>`:`<button class="btn sm" data-sw="${id}">Switch</button>`}
-    ${Object.keys(store.profiles).length>1?`<button class="btn ghost sm" data-del="${id}" aria-label="Delete profile">✕</button>`:''}</div>`}).join('')
+    ${id===store.active?`<button class="btn ghost sm" data-ren="${esc(id)}">Rename</button>`:`<button class="btn sm" data-sw="${esc(id)}">Switch</button>`}
+    ${Object.keys(store.profiles).length>1?`<button class="btn ghost sm" data-del="${esc(id)}" aria-label="Delete profile">✕</button>`:''}</div>`}).join('')
     +`<div class="btnrow"><button class="btn ghost sm" id="addprof">+ New profile</button></div></div>`;
   h+=`<div class="panel"><h3>Backup &amp; restore</h3><p style="margin:0;color:var(--muted);font-size:14px;line-height:1.5">Progress saves automatically in this browser. Download a backup to move it to another device or keep it safe.</p>
     <div class="btnrow"><button class="btn sm" id="dl">Download backup</button><button class="btn ghost sm" id="code">Show save code</button><button class="btn ghost sm" id="imp">Import…</button><button class="btn red sm" id="rst">Reset this profile</button></div></div></div>`;
@@ -1145,6 +1165,7 @@ document.addEventListener('keydown',ev=>{
   if(ev.key==='Escape'){const m=document.querySelector('.modal-bg');if(m){m.remove();return}const q=$('#quit')||$('#pback');if(q)q.click();return}
   if(document.querySelector('.modal-bg')) return;
   if(ev.key==='Enter'){
+    const f=document.activeElement;if(f&&f.tagName==='BUTTON'&&!f.disabled) return;
     const b=$('#next')||$('#check')||$('#go')||$('#nextl')||$('#retry');
     if(b&&!b.disabled){ev.preventDefault();b.click()}
   } else if(L&&L.e&&L.s&&L.e.k==='mc'&&!L.locked&&/^[1-9]$/.test(ev.key)&&document.activeElement.tagName!=='INPUT'){
