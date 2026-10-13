@@ -181,6 +181,8 @@ button.chip{color:var(--text)}
 <div id="app"></div>
 <script>
 // ==DATA==
+/* APPEND ONLY: saved progress is keyed by position (unit-lesson). Never reorder, rename or remove existing units/lessons.
+   Add new content at the end, then run: node tools/check-append-only.js --update */
 /* Exercise helpers. For mc(), the FIRST option is the correct one (options are shuffled at runtime). */
 const mc    = (q,opts,why,code,mono)=>({k:'mc',q,opts,why,code,mono});
 const fill  = (q,tpl,ans,extra,why)=>({k:'fill',q,tpl,ans,extra,why});
@@ -729,6 +731,206 @@ UNITS.push(
   match("Match each TDFunctions helper to its job.",[["TDF.clamp","Limit a value to a range"],["TDF.incrementStringDigits","'geo1' becomes 'geo2'"],["TDF.arrangeNode","Move a node beside the network"],["TDF.messageDialog","Show an OK popup"]]),
   fill("Import the helper module with the usual alias.","import TDFunctions as ___",["TDF"],["TF","FN","TDU"],"Docs examples use `TDF`."),
   mc("What does `TDF.formatString('{n} items', {'n': 3})` return?",["'3 items'","'{n} items'","'n items'","An error"],"It fills an f-string-style template from a dict.",null,true)
+ ]}
+]}
+);
+
+
+/* ====== Units 14-18: Panels, TOPs, SOPs, NumPy/Channels/Cells, Pages & collections (APPENDED — never reorder) ====== */
+UNITS.push(
+/* ================= UNIT 14 ================= */
+{title:"Panels & UI",desc:"Panel COMPs, simulated input and Panel Execute",color:"#6fd0e0",dark:"#4aa8b8",lessons:[
+ {title:"Panel values",icon:"🖱️",tip:[
+  {t:"Every Panel COMP has a `panel` member. Its values hang off it as attributes — read them with `.val`.",code:"v = op('button1').panel.u.val"},
+  {t:"Panel COMPs also know their pixel geometry and family: `x`, `y`, `width`, `height`, margin-adjusted versions (`marginX`, …), `panelRoot`, `panelChildren`, `panelParent(n)`, `locateMouse()`, `locateMouseUV()` and `setFocus()`.",code:"p = me.panelParent(2)\nop('container1').locateMouseUV()\nop('container1').setFocus(moveMouse=True)"}],
+  ex:[
+  mc("How do you read the u panel value of button1?",["op('button1').panel.u.val","op('button1').u","op('button1').panel['u']","op('button1').par.u"],"Panel values hang off `.panel`.",null,true),
+  mc("What does `panelRoot` return?",["The top-most Panel COMP in the hierarchy","The root of the project","The first child panel","The parent's parent"],"It walks up through the panel hierarchy."),
+  mc("Which attribute lists a Panel COMP's child panels?",["panelChildren","panelList","kids","subPanels"],"It's a list of the child Panel COMPs.",null,true),
+  match("Match each attribute to what it gives you.",[["x, y","Position in pixels"],["width, height","Size in pixels"],["marginX","Position adjusted for margins"],["dropReady","True when a drop will be accepted"]]),
+  fill("Get the second panel parent.","p = me.___(2)",["panelParent"],["panelUp","panelRoot","panelAbove"],"`panelParent(n)` uses the wired input panel first, otherwise the containing panel."),
+  mc("What does `locateMouseUV()` return?",["Normalized mouse coordinates relative to the panel","Pixel coordinates on the screen","The mouse button state","The hovered panel"],"`locateMouse()` gives the same position in pixels."),
+  mc("`setFocus()` only works if…",["The panel is open","The panel is a Container","The project is paused","The panel is locked"],"It sets hierarchical focus on an open panel.")
+ ]},
+ {title:"Simulating input",icon:"🤖",tip:[
+  {t:"`interactMouse()` simulates rollover, clicks, drags and the wheel; `left=True` starts a mouse-down, later `True` calls drag and `left=False` releases. `leftClick=2` is a double-click. Use `pixels=True` for pixel coordinates.",code:"op('container1').interactMouse(0.5, 0.5, leftClick=2)\nop('container1').interactMouse(10, 20, pixels=True)"},
+  {t:"`interactTouch()` simulates multiple touches, each identified by an id you choose. `interactClear()` ends everything and `interactStatus()` lists active interactions (mouse id is `'__MOUSE__'`).",code:"op('container1').interactTouch(0.5, 0.5, start='finger')\nop('container1').interactTouch(0.7, 0.5, move='finger')\nop('container1').interactTouch(0.7, 0.5, end='finger')\nop('container1').interactClear()"}],
+  ex:[
+  mc("What does this simulate?",["A double-click at the centre of the panel","A drag","A mouse wheel turn","A hover"],"`leftClick=2` means a double-click.",`op('container1').interactMouse(0.5, 0.5, leftClick=2)`),
+  mc("How do you pass pixel coordinates to interactMouse?",["pixels=True","units='px'","absolute=True","scale=1"],"With `pixels=True`, u and v are pixels.",null,true),
+  fill("Start a touch identified as finger.","op('container1').interactTouch(0.5, 0.5, ___='finger')",["start"],["begin","down","press"],"Follow with `move='finger'` and `end='finger'`."),
+  mc("Which call ends all mouse and touch interactions?",["interactClear()","interactEnd()","interactMouse(end=True)","panel.reset()"],"It also clears rollover states.",null,true),
+  mc("What id does `interactStatus()` use for mouse input?",["'__MOUSE__'","'mouse'","0","None"],"Each entry is `[id, panel, state, primary]`.",null,true),
+  mc("What do `left=True` and later `left=False` do in interactMouse?",["Press the left button, then release it","Toggle hover","Click twice","Scroll"],"The first True starts a mouse-down, later Trues drag, and False releases."),
+  mc("What does `interactMouse()` return?",["The PanelCOMP","None","True","The clicked value"],"It returns the panel, so calls can be chained.")
+ ]},
+ {title:"Panel Execute DAT",icon:"🔔",tip:[
+  {t:"A **Panel Execute DAT** watches a panel value. Each callback receives a `panelValue`, which has `.name` and `.val`.",code:"def onOffToOn(panelValue):\n    print(panelValue.name, panelValue.val)\n\ndef whileOn(panelValue):\n    pass\n\ndef onOnToOff(panelValue):\n    pass\n\ndef whileOff(panelValue):\n    pass\n\ndef onValueChange(panelValue):\n    pass"},
+  {t:"Enable the conditions you need (Off to On, While On, On to Off, While Off, Value Change). If several events happen at once, only one trigger runs — Off to On wins over Value Change. The DAT's `panels` and `panelvalue` parameters choose what to watch."}],
+  ex:[
+  mc("Which Panel Execute callback runs every frame while the value is on?",["whileOn","onWhileOn","onOn","everyFrame"],"The panel version is `whileOn` — unlike CHOP Execute's `onWhileOn`.",null,true),
+  mc("What does a Panel Execute callback receive?",["A panelValue","A channel","A parameter","An operator"],"Use `panelValue.name` and `panelValue.val`."),
+  fill("Print the value inside a callback.","def onValueChange(panelValue):\n    print(panelValue.name, panelValue.___)",["val"],["value","num","data"],"`.val` holds the current value."),
+  mc("If both Off to On and Value Change are enabled and both occur, what runs?",["Only Off to On","Both","Only Value Change","Neither"],"Only one trigger runs; Off to On takes precedence."),
+  match("Match each callback to when it fires.",[["onOffToOn","Once, when the value turns on"],["onOnToOff","Once, when it turns off"],["whileOff","Every frame while it's off"],["onValueChange","When the value changes in any way"]]),
+  mc("Which parameter selects the Panel COMPs to monitor?",["panels","source","comp","target"],"`panelvalue` selects which panel value to monitor.",null,true),
+  mc("When does `onOffToOn` fire?",["On the first frame the value is greater than zero","Every frame it is on","Whenever it changes","Only when it reaches exactly 1"],"It fires once per transition.")
+ ]}
+]},
+/* ================= UNIT 15 ================= */
+{title:"TOPs & Images",desc:"Pixels, saving images and NumPy with Script TOPs",color:"#e0b06f",dark:"#b88a4a",lessons:[
+ {title:"TOP basics",icon:"🖼️",tip:[
+  {t:"A TOP knows its size and memory: `width`, `height`, `aspect`, `aspectWidth`, `aspectHeight`, `depth` (3D textures) and `gpuMemory` (bytes). Use `pixelFormatName` in logic — `pixelFormat` is display-only.",code:"n = op('noise1')\nw, h = n.width, n.height\nmb = n.gpuMemory / 1e6\nn.pixelFormatName"},
+  {t:"`sample()` reads one pixel with keyword arguments only (`x`/`y` in pixels, `u`/`v` normalised). It returns an RGBA tuple, but it's slow and stalls the GPU — use it for debugging.",code:"r = n.sample(x=25, y=100)[0]\ng = n.sample(u=0.5, v=0.5)[1]"}],
+  ex:[
+  mc("What is `n.aspect`?",["Width divided by height","Height divided by width","The pixel count","The depth"],"`aspectWidth` and `aspectHeight` give the ratio components."),
+  mc("Which should you use in Python logic?",["pixelFormatName","pixelFormat","Either one","Neither"],"`pixelFormat` is display-only."),
+  fill("Read the green value at the centre.","g = n.sample(u=0.5, v=0.5)[___]",["1"],["0","2","3"],"RGBA: red 0, green 1, blue 2, alpha 3."),
+  mc("Why avoid `sample()` in real-time code?",["It's slow and stalls the GPU","It's deprecated","It only works on 8-bit TOPs","It modifies the TOP"],"Use it for debugging."),
+  mc("`sample(x=25, y=100)` uses which coordinates?",["Pixel coordinates","Normalised coordinates","Screen coordinates","Percentages"],"`u` and `v` are the normalised ones."),
+  mc("What does `n.gpuMemory / 1e6` give?",["GPU memory used, in megabytes","Frames per second","Pixels, in millions","CPU memory"],"`gpuMemory` is in bytes."),
+  match("Match each attribute to its meaning.",[["width","Texture width in pixels"],["height","Texture height in pixels"],["depth","Depth of a 3D texture"],["aspect","Width divided by height"]])
+ ]},
+ {title:"Saving images",icon:"💾",tip:[
+  {t:"`save()` writes `.tif`, `.tiff`, `.jpg`, `.jpeg`, `.bmp`, `.png`, `.exr` or `.dds`. Options include `quality`, `createFolders`, `metadata` and `asynchronous`.",code:"n.save('picture.jpg', quality=0.8)\nn.save('a/b/image.exr', createFolders=True)\nn.save('image.exr', metadata=[('author', 'derivative')])\ns = n.save('picture2.jpg', asynchronous=True)\ns.isCompleted()"},
+  {t:"`saveByteArray()` returns the encoded image in memory. The file type needs its leading period.",code:"arr = n.saveByteArray('.jpg')"}],
+  ex:[
+  mc("Which formats can `save()` write?",["tif, jpg, bmp, png, exr and dds","Only png","Only jpg and png","mov and mp4"],"Pick the format with the file extension."),
+  fill("Save with 80% quality.","n.save('picture.jpg', ___=0.8)",["quality"],["compression","level","q"],"`quality` is a 0–1 value."),
+  mc("What does `asynchronous=True` give you back?",["A status object with isCompleted()","The saved path","A bytearray","Nothing"],"Check `isCompleted()` to see when the write finishes."),
+  mc("Which call returns an encoded image as bytes?",["n.saveByteArray('.jpg')","n.save(bytes=True)","n.toBytes('jpg')","n.numpyArray().tobytes()"],"The suffix needs its leading period.",null,true),
+  mc("What does `createFolders=True` do?",["Creates missing directories in the path","Creates a folder of variations","Saves each channel separately","Nothing for images"],"Handy for dated output paths."),
+  mc("Which line saves an EXR with metadata?",["n.save('image.exr', metadata=[('author', 'derivative')])","n.save('image.png', hdr=True)","n.saveHDR('image')","n.save('image.exr', tags={'author': 'x'})"],"`metadata` takes a list of key/value pairs.",null,true),
+  typ("Save the TOP in n to picture.jpg.",["n.save('picture.jpg')"],"`n.save('picture.jpg')`")
+ ]},
+ {title:"NumPy & Script TOPs",icon:"🧪",tip:[
+  {t:"`numpyArray()` returns a float32 NumPy array indexed `[h, w]`. `delayed=True` downloads on the next call so the GPU doesn't stall (it may return `None` — retry). `writable=True` gives a fast writable copy that doesn't change the TOP.",code:"arr = n.numpyArray()\narr = n.numpyArray(delayed=True)\narr = n.numpyArray(writable=True)"},
+  {t:"In a Script TOP, `copyNumpyArray()` fills the TOP from an array. For 8-bit output scale 0–1 values to 0–255 first, then cast.",code:"import numpy as np\n\ndef onCook(scriptOp):\n    arr = scriptOp.inputs[0].numpyArray()\n    arr *= 255\n    arr = arr.astype(np.uint8)\n    scriptOp.copyNumpyArray(arr)"}],
+  ex:[
+  mc("What dtype does `n.numpyArray()` return?",["float32","uint8","int64","float64"],"TOP data is always float32 when read."),
+  mc("What does `numpyArray(delayed=True)` do?",["Downloads on the next call, avoiding a GPU stall","Delays the cook by a frame","Waits for the TOP to cook","Compresses the array"],"It may return None, so retry."),
+  fill("Convert the scaled array to 8-bit.","npArray = npArray.___(np.uint8)",["astype"],["cast","convert","as"],"Scale to 0–255 first, then cast."),
+  mc("Why do 0–1 floats look wrong when cast straight to uint8?",["They need scaling to 0–255 first","uint8 isn't supported","The array must be transposed","The pixel format is locked"],"Casting without scaling collapses almost everything to 0."),
+  mc("Which method fills a Script TOP from a NumPy array?",["scriptOp.copyNumpyArray(arr)","scriptOp.setArray(arr)","scriptOp.numpy = arr","scriptOp.write(arr)"],"The array can have 3 or 4 channels.",null,true),
+  mc("Which Pixel Format stores 8-bit fixed RGBA?",["rgba8fixed","rgba32float","rgb8","uint8rgba"],"`rgba32float` is the 32-bit float option.",null,true),
+  mc("How are the first two indices of a TOP array ordered?",["[height, width]","[width, height]","[x, y]","[channel, pixel]"],"Rows come first, like any image array.")
+ ]}
+]},
+/* ================= UNIT 16 ================= */
+{title:"SOPs & Geometry",desc:"Geometry properties, bounds, saving and Script SOPs",color:"#a0e07f",dark:"#7ab85a",lessons:[
+ {title:"SOP properties",icon:"🔷",tip:[
+  {t:"A SOP exposes its geometry: `points`, `prims`, `numPoints`, `numPrims`, `numVertices`, `pointAttribs`, `primAttribs`, `vertexAttribs`, and dicts `pointGroups` / `primGroups`.",code:"n = op('sop1')\nprint(n.numPoints, n.numPrims, n.numVertices)\nprint(n.pointAttribs, n.primGroups)"},
+  {t:"`center` is settable; `min`, `max` and `size` are read-only `tdu.Position` values. `compare` and `template` are read/write flags.",code:"print(n.min, n.max, n.size)\nn.center = tdu.Position(0, 0, 0)"}],
+  ex:[
+  match("Match each attribute to its meaning.",[["numPoints","Point count"],["numPrims","Primitive count"],["numVertices","Total vertices across primitives"],["size","Per-axis extent"]]),
+  mc("What type is `n.center`?",["tdu.Position","A tuple of ints","A string","A list"],"It's read/write."),
+  fill("Move the geometry's centre to the origin.","n.center = tdu.___(0, 0, 0)",["Position"],["Vector","Point","Matrix"],"`tdu.Position(x, y, z)`"),
+  mc("Which of these are read-only?",["min, max and size","center","compare","template"],"Only `center` among the geometry values is settable."),
+  mc("What do `pointGroups` and `primGroups` return?",["Dicts","Lists","Strings","Sets"],"They map group names to group data."),
+  mc("Which attribute gives the total number of vertices?",["numVertices","numPoints * numPrims","vertexCount","len(vertices)"],"Vertices belong to primitives.",null,true),
+  typ("Print the point and primitive counts of the SOP in n.",["print(n.numPoints,n.numPrims)"],"`print(n.numPoints, n.numPrims)`")
+ ]},
+ {title:"Bounds & saving",icon:"📐",tip:[
+  {t:"`bounds(display=False, render=False)` returns the bounds, centre and size of the geometry. It replaces the deprecated `computeBounds`. `display` / `render` limit the calculation to operators with those flags on.",code:"b = n.bounds()\nb2 = n.bounds(display=True)"},
+  {t:"`save(filepath, createFolders=False)` writes geometry and returns the path saved. A `.bgeo` file works for other modelling packages.",code:"name = n.save()\nn.save('output.bgeo')"}],
+  ex:[
+  mc("Which method replaces the deprecated computeBounds?",["bounds()","getBounds()","extent()","boundingBox()"],"It returns the bounds, centre and size.",null,true),
+  mc("What do `display=True` and `render=True` do in bounds()?",["Limit the calculation to operators with those flags on","Show the bounds in the viewer","Render the bounding box","Colour the bounds"],"By default the flags are ignored."),
+  fill("Save the geometry to a file.","name = n.___('output.bgeo')",["save"],["write","export","dump"],"It returns the path that was saved."),
+  mc("What does a SOP's `save()` return?",["The path it saved to","True","A Bounds object","Nothing"],"With no path it uses a default name in the project folder."),
+  mc("What does `createFolders=True` do?",["Creates missing directories in the path","Splits the geometry into folders","Saves a folder of attributes","Nothing"],"Handy when saving to a new output directory."),
+  mc("Which file extension does the docs mention for other modelling packages?",[".bgeo",".tox",".toe",".json"],"`n.save('output.bgeo')`",null,true),
+  mc("Which SOP flags are read/write?",["compare and template","min and max","points and prims","numPoints and numPrims"],"Everything else listed is read-only.")
+ ]},
+ {title:"Script SOP",icon:"📝",tip:[
+  {t:"A **Script SOP** builds geometry in its callbacks DAT. The template calls `clear()` first, and `setupParameters` adds custom parameters when you press *Setup Parameters*. `onPulse(par)` runs when a custom pulse parameter is pressed.",code:"def cook(scriptOP):\n    scriptOP.clear()\n    return\n\ndef setupParameters(scriptOP):\n    scriptOP.appendParFloat('ValueA', page='Custom')\n    return\n\ndef onPulse(par):\n    return"},
+  {t:"The docs say a Script SOP can create, delete and modify points, primitives and vertices, add polygons, Bezier curves and meshes, combine inputs, and create attributes such as `Cd`, `uv` and `N`. (Your version's template may name the cook callback `onCook` — check the callbacks DAT.)"}],
+  ex:[
+  mc("Which callback does the Setup Parameters button run?",["setupParameters(scriptOP)","onSetup(scriptOP)","init(scriptOP)","buildPars(scriptOP)"],"It's where you add custom parameters.",null,true),
+  fill("Add a float parameter on a page called Custom.","scriptOP.___('ValueA', page='Custom')",["appendParFloat"],["appendFloat","addPar","newFloat"],"`appendParFloat(name, page=…)`"),
+  mc("What does `scriptOP.clear()` do at the start of a cook?",["Removes the existing geometry","Clears the Textport","Resets the parameters","Locks the SOP"],"You rebuild the geometry each cook."),
+  mc("When does `onPulse(par)` run?",["When a custom pulse parameter is pressed","Every frame","Whenever the SOP cooks","When the file is saved"],"It receives the pulse parameter."),
+  mc("What can a Script SOP do, per the docs?",["Create, delete and modify points, prims and vertices","Only read geometry","Only create points","Only set attributes"],"It can also add polygons, Bezier curves and meshes."),
+  mc("Which built-in attributes does the page mention?",["Cd, uv and N","R, G and B","pos and vel","id and age"],"Colour, texture coordinates and normals."),
+  mc("Where does a Script SOP's code live?",["In its callbacks DAT","In the SOP's parameters","In the Textport","In a Panel COMP"],"Open the callbacks DAT it points to.")
+ ]}
+]},
+/* ================= UNIT 17 ================= */
+{title:"NumPy, Channels & Cells",desc:"Arrays in CHOPs, Channel extras and Cell casting",color:"#e07fe0",dark:"#b85fb8",lessons:[
+ {title:"NumPy & CHOPs",icon:"🔢",tip:[
+  {t:"`op('chop').numpyArray()` is a 2D float32 array of shape `(channels, samples)`; a single channel's `numpyArray()` is 1D. In a Script CHOP, write back with `copyNumpyArray()` using a float32 array of the right shape.",code:"import numpy as np\n\ndef onCook(scriptOp):\n    scriptOp.clear()\n    a = np.zeros((3, 20), dtype=np.float32)\n    a[1][10] = 1.234\n    scriptOp.copyNumpyArray(a)"},
+  {t:"Prefer vectorised NumPy operations and broadcasting over Python loops.",code:"inPos = scriptOp.inputs[0].numpyArray().T\nnpDist = np.sqrt(((inPos[:,:,None] - inPos[:,:,None].T) ** 2).sum(1))"}],
+  ex:[
+  mc("What shape does `op('chop').numpyArray()` have?",["(channels, samples)","(samples, channels)","(samples,)","(channels,)"],"One row per channel."),
+  mc("What does `op('c')['chan1'].numpyArray()` return?",["A 1D float32 array, one value per sample","A 2D array","A list","A single float"],"Channel arrays are one-dimensional."),
+  fill("Write an array into a Script CHOP.","scriptOp.___(npArray)",["copyNumpyArray"],["setNumpy","writeArray","copyArray"],"The array must be float32 and (channels, samples)."),
+  mc("Which dtype must the array have when written to a Script CHOP?",["float32","float64","int32","uint8"],"CHOP data is float32."),
+  mc("Why does the pairwise-distance example use `.T`?",["To get (samples, channels) so broadcasting works per sample","To convert to uint8","To save memory","To sort the channels"],"Transposing reshapes the data for broadcasting."),
+  mc("Which approach is usually faster for large data?",["Vectorised NumPy operations","Python for loops over samples","Calling eval() per sample","Building lists"],"Broadcasting avoids the Python interpreter loop."),
+  typ("Make a float32 array of zeros with 3 channels and 20 samples in variable a (np is already imported).",["a=np.zeros((3,20),dtype=np.float32)"],"`a = np.zeros((3, 20), dtype=np.float32)`")
+ ]},
+ {title:"Channel extras",icon:"📡",tip:[
+  {t:"A Channel has `valid`, `index`, `name`, `owner` and `exports`. `vals` reads all samples; **writing** `vals` (or `copyNumpyArray`) only works inside a Script CHOP. `len(channel)` is the sample count.",code:"c = op('pattern1')['chan1']\nlen(c)\nc.vals\nc.average(); c.min(); c.max()"},
+  {t:"Evaluate at a sample, frame or time with `eval(index)`, `evalFrame(frame)` and `evalSeconds(secs)`. A Channel can also be used as a number directly.",code:"c.eval(10)\nc.evalSeconds(2.5)\nc + 1   # same as c.eval() + 1"}],
+  ex:[
+  mc("What does `len(n['chan2'])` give?",["The number of samples","The number of channels","The length of the name","The channel index"],"Channels behave like sequences of samples."),
+  mc("Which method evaluates a channel at a time in seconds?",["evalSeconds(secs)","evalTime(secs)","eval(seconds=secs)","atSeconds(secs)"],"`evalFrame(frame)` does the same for frames.",null,true),
+  mc("Where can you write a channel's `vals`?",["Only in Python inside a Script CHOP","Anywhere","Only through expressions","Never"],"Elsewhere it's read-only."),
+  fill("Get the highest sample.","peak = n['chan1'].___()",["max"],["top","peak","highest"],"There are also `min()` and `average()`."),
+  mc("What's the relationship between these two lines?",["They're equivalent — a Channel can be used as a number","The second raises an error","Only the first works in expressions","They differ by one sample"],"A Channel casts to its current value.",`n['chan1'].eval() + 1\nn['chan1'] + 1`),
+  mc("What is a Channel's `exports`?",["The parameters it currently exports to","A save method","Exported file names","A boolean flag"],"The list may be empty."),
+  mc("What does a Channel's `valid` report?",["Whether the channel still exists","Whether values are finite","Whether it's exported","Whether it's cooked"],"It's False once the channel has been deleted.")
+ ]},
+ {title:"Cells & casting",icon:"🔤",tip:[
+  {t:"A Cell's `val` is always a **string** (read/write). It also has `row`, `col`, `owner`, `valid` and `offset(r, c)` — positive rows count down, positive columns count right.",code:"c = op('table1')['March', 'Sales']\nc.val\nc.row, c.col\nc.offset(-1, 2)   # one row up, two columns right"},
+  {t:"Cells auto-cast in expressions: if the cell holds `'3'`, `n[1,2] + 1` is `4`, but `n[1,2].val + 1` is an error (string + int).",code:"n[1,2].val + n[1,2].val   # '33'\nn[1,2] + n[1,2]           # 6"}],
+  ex:[
+  mc("What type is `op('table1')[1,2].val`?",["A string","A float","An int","A Cell"],"Cell values are always strings.",null,true),
+  mc("If the cell holds '3', what is `n[1,2] + n[1,2]`?",["6","'33'","'3 3'","An error"],"The cells auto-cast to numbers.",null,true),
+  mc("If the cell holds '3', what is `n[1,2].val + n[1,2].val`?",["'33'","6","An error","'3+3'"],"`.val` is a string, so `+` joins them.",null,true),
+  mc("Why does `n[1,2].val + 1` fail?",["It adds a string and an int","val is read-only","Cells can't hold numbers","1 is not valid"],"Use the cell itself or convert with `float()`."),
+  fill("Get the cell one row up and two columns right.","c.___(-1, 2)",["offset"],["move","shift","next"],"Positive rows count down."),
+  match("Match each Cell member to its meaning.",[["row","Numeric row of the cell"],["col","Numeric column of the cell"],["owner","The OP the cell belongs to"],["valid","False once the cell is deleted"]]),
+  mc("What does `op('table1')[1,2].run(delayFrames=10)` do?",["Runs the cell's contents as a script after 10 frames","Deletes the cell after 10 frames","Waits 10 frames then reads it","Copies the cell"],"Cells can be run just like DATs.")
+ ]}
+]},
+/* ================= UNIT 18 ================= */
+{title:"Pages & Dependable Collections",desc:"The Page class, parameter types and TDStoreTools",color:"#7f9fe0",dark:"#5f7fbb",lessons:[
+ {title:"The Page class",icon:"📄",tip:[
+  {t:"A Page has `name` (settable), `owner`, `index`, `isCustom`, `pars` and `parGroups` — a ParGroup is the set of parameters on one line. Every `append*` method takes `name`, `label=None`, `order=None`, `replace=True` and returns a ParGroup.",code:"page = op('base1').appendCustomPage('Custom1')\npage.appendFloat('Value')\npage.appendFloat('Speed')\npage.appendFloat('Color')\npage.sort('Speed', 'Color', 'Value')"},
+  {t:"`size` above 1 creates several fields; their parameter names get an index suffix starting at 1. `resetPars()` returns True if anything changed and `destroy()` removes the page and all its parameters.",code:"page.appendFloat('Pos', size=3)   # Pos1 Pos2 Pos3"}],
+  ex:[
+  mc("What does an `append*` method return?",["A ParGroup","A Par","The page","None"],"Because one call can create several fields."),
+  mc("What does `replace=True` do if the parameter already exists?",["Replaces it with fresh attributes","Raises an error","Skips it","Renames it"],"With `replace=False` it raises an error instead."),
+  mc("`appendFloat('Pos', size=3)` creates parameters named…",["Pos1, Pos2, Pos3","Posx, Posy, Posz","Pos[0], Pos[1], Pos[2]","Pos, Pos, Pos"],"The suffix starts at 1.",null,true),
+  fill("Reorder the page's parameters.","page.___('Speed', 'Color', 'Value')",["sort"],["order","arrange","reorder"],"`sort(*pars)` reorders custom parameters."),
+  mc("What does `resetPars()` return?",["True if anything changed","The parameters","None","The page"],"It resets every parameter on the page."),
+  mc("What is a ParGroup?",["The set of parameters on one line","A group of pages","A custom operator","A tuple of operators"],"Tuplets like tx/ty/tz are ParGroups."),
+  mc("What does `page.destroy()` do?",["Destroys the page and all its parameters","Hides the page","Destroys only the page","Resets the values"],"Use it with care.")
+ ]},
+ {title:"Parameter types",icon:"🧬",tip:[
+  {t:"Number fields: `appendInt`, `appendFloat`, and float shortcuts of fixed size — `appendXY` / `appendWH` / `appendUV` (2), `appendXYZ` / `appendUVW` / `appendRGB` (3), `appendXYZW` / `appendRGBA` (4). Text and menus: `appendStr`, `appendMenu`, `appendStrMenu`. Set menu entries via the Par's `menuNames` and `menuLabels`."},
+  {t:"Buttons: `appendToggle`, `appendPulse`, `appendMomentary`. Files: `appendFile`, `appendFileSave`, `appendFolder`. References accept only one family: `appendOP`, `appendCOMP`, `appendObject`, `appendPanelCOMP`, `appendTOP`, `appendCHOP`, `appendSOP`, `appendPOP`, `appendMAT`, `appendDAT`. Also `appendPython`, `appendHeader`, `appendSequence` and `appendParGroup`.",code:"page.appendTOP('Source')\npage.appendFolder('Output')\npage.appendPulse('Reset')"}],
+  ex:[
+  match("Match each method to the fields it creates.",[["appendXY","Two floats (x, y)"],["appendRGB","Three floats (r, g, b)"],["appendRGBA","Four floats (r, g, b, a)"],["appendWH","Two floats (width, height)"]]),
+  mc("Which method accepts only TOPs?",["appendTOP","appendOP","appendDAT","appendObject"],"`appendOP` accepts any operator.",null,true),
+  mc("How do you set a menu parameter's choices?",["Set the Par's menuNames and menuLabels","Pass items= to appendMenu","Use page.setMenu()","Edit a DAT"],"They're lists on the Par."),
+  mc("What does `appendHeader` show?",["Only the value, not the label","Only the label","A button","A divider line"],"It's a display-style parameter."),
+  mc("What does `appendSequence` also create?",["A Sequence object on the component with the same name","A DAT","A custom page","A tuplet"],"Sequences let users add repeated blocks."),
+  fill("Add a folder picker.","page.___('Output')",["appendFolder"],["appendDir","appendPath","appendFile"],"`appendFile` shows a file picker instead."),
+  mc("Which creates a pulse button?",["appendPulse","appendButton","appendClick","appendTrigger"],"`appendMomentary` is the momentary variant.",null,true)
+ ]},
+ {title:"Dependable collections",icon:"🕸️",tip:[
+  {t:"`StorageManager(extension, ownerComp, storedItems=None, restoreAllDefaults=False, sync=True, locked=True)` stores data in `ownerComp.storage[<extension class name>]` and works like a dict. With `sync=True`, items no longer defined are removed and new ones get their defaults. Use `restoreDefault(item)` or `restoreAllDefaults()` to reset.",code:"from TDStoreTools import StorageManager\nself.sm = StorageManager(self, ownerComp, storedItems)\nself.sm.restoreDefault('speed')"},
+  {t:"**Deeply dependable collections** (`DependDict`, `DependList`, `DependSet`) notify expressions when their *contents* change, including nested collections. Use `getRaw()` to strip the wrappers, `getDependency()` to keep them, `setItem(key, item, raw=False)` to set, and `getDependableSlice()` for slices (normal slicing strips dependencies). They're slower than plain collections.",code:"dd.setItem('speed', 5)\ndd.getRaw('speed')\ndl.append([1, 2])\ndl.getDependableSlice(0, 2)"}],
+  ex:[
+  mc("Where does StorageManager keep its data?",["In ownerComp.storage under the extension's class name","In a Table DAT","In project variables","In a text file"],"That's why the class name matters."),
+  mc("What happens if two extensions with the same class name sit on one component?",["They share storage","They can't initialise","One is renamed","Storage is wiped"],"Storage is keyed by class name."),
+  mc("What does `sync=True` do?",["Removes items no longer defined and sets new ones to defaults","Syncs the data to disk","Syncs two components","Locks the storage"],"It keeps stored items matching your definitions."),
+  fill("Read a DependDict value without dependency wrappers.","dd.___('speed')",["getRaw"],["raw","getValue","plain"],"`getDependency()` keeps the wrapper."),
+  mc("Why use `getDependableSlice()` on a DependList?",["Normal slicing strips dependencies","Slices are slower otherwise","It copies the list","It sorts the list"],"It returns a slice with dependencies intact."),
+  mc("What's the trade-off of deeply dependable collections?",["They run more slowly than plain collections","They can't hold numbers","They aren't saved","They need extra licences"],"Use them where notification matters."),
+  mc("What does `setItem(key, item, raw=True)` do?",["Stops nested collections becoming deeply dependable","Stores the item unsaved","Locks the key","Copies the item"],"By default nested collections become dependable too.")
  ]}
 ]}
 );

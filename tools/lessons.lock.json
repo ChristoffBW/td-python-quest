@@ -1,0 +1,108 @@
+[
+ {
+  "title": "Textport Basics",
+  "lessons": [
+   "Say hello",
+   "Variables",
+   "Strings & f-strings",
+   "Casting & text tools"
+  ]
+ },
+ {
+  "title": "Reaching Operators",
+  "lessons": [
+   "op() — grab a node",
+   "Parameters",
+   "Walking the network",
+   "OP info & checks"
+  ]
+ },
+ {
+  "title": "Data: CHOPs & DATs",
+  "lessons": [
+   "CHOP channels",
+   "DAT tables & text",
+   "Time & math helpers"
+  ]
+ },
+ {
+  "title": "Logic & Loops",
+  "lessons": [
+   "if / else",
+   "Loops over operators",
+   "Lists, dicts, functions"
+  ]
+ },
+ {
+  "title": "Callbacks",
+  "lessons": [
+   "Execute DAT",
+   "CHOP Execute",
+   "Parameter Execute & run()"
+  ]
+ },
+ {
+  "title": "Build & Script",
+  "lessons": [
+   "Creating operators",
+   "Script CHOP",
+   "Storage & extensions"
+  ]
+ },
+ {
+  "title": "References & Shortcuts",
+  "lessons": [
+   "Reference paths",
+   "Textport & errors",
+   "Modules in DATs"
+  ]
+ },
+ {
+  "title": "td Module & Utilities",
+  "lessons": [
+   "Global objects",
+   "The tdu toolbox",
+   "Variables"
+  ]
+ },
+ {
+  "title": "Operators in Depth",
+  "lessons": [
+   "Identity & hierarchy",
+   "Look, feel & flags",
+   "Connections & cooking"
+  ]
+ },
+ {
+  "title": "Parameters Deep Dive",
+  "lessons": [
+   "Modes & values",
+   "Ranges, menus & pulses",
+   "Custom parameters"
+  ]
+ },
+ {
+  "title": "Building Networks",
+  "lessons": [
+   "Create & copy",
+   ".tox files & cloning",
+   "run() in depth"
+  ]
+ },
+ {
+  "title": "CHOP & DAT Deep Dive",
+  "lessons": [
+   "The CHOP class",
+   "The DAT class",
+   "Scripts, JSON & Evaluate"
+  ]
+ },
+ {
+  "title": "Extensions Mastery",
+  "lessons": [
+   "Setting up extensions",
+   "Properties & storage",
+   "Gotchas & helper modules"
+  ]
+ }
+]
